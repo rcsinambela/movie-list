@@ -54,8 +54,21 @@ function Logo() {
     );
 }
 
-export default function App() {
+function Search() {
     const [query, setQuery] = useState("");
+
+    return (
+        <input
+            className="search"
+            type="text"
+            placeholder="Search movies..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+        />
+    );
+}
+
+export default function App() {
     const [movies, setMovies] = useState(tempMovieData);
     const [watched, setWatched] = useState(tempWatchedData);
     const [isOpen1, setIsOpen1] = useState(true);
@@ -69,13 +82,7 @@ export default function App() {
         <>
             <nav className="nav-bar">
                 <Logo />
-                <input
-                    className="search"
-                    type="text"
-                    placeholder="Search movies..."
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                />
+                <Search />
                 <p className="num-results">
                     Found <strong>{movies.length}</strong> results
                 </p>
