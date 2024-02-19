@@ -68,6 +68,13 @@ function Search() {
     );
 }
 
+function NumResults() {
+    return (
+        <p className="num-results">
+            Found <strong>x</strong> results
+        </p>
+    );
+}
 export default function App() {
     const [movies, setMovies] = useState(tempMovieData);
     const [watched, setWatched] = useState(tempWatchedData);
@@ -83,9 +90,7 @@ export default function App() {
             <nav className="nav-bar">
                 <Logo />
                 <Search />
-                <p className="num-results">
-                    Found <strong>{movies.length}</strong> results
-                </p>
+                <NumResults />
             </nav>
 
             <main className="main">
