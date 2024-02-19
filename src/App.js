@@ -19,6 +19,48 @@ const tempMovieData = [
         Year: "2023",
         Poster: "https://m.media-amazon.com/images/M/MV5BYzE4MTllZTktMTIyZS00Yzg1LTg1YzAtMWQwZTZkNjNkODNjXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_SX300.jpg",
     },
+    {
+        imdbID: "tt1216475",
+        Title: "Cars 2",
+        Year: "2011",
+        Poster: "https://m.media-amazon.com/images/M/MV5BMTUzNTc3MTU3M15BMl5BanBnXkFtZTcwMzIxNTc3NA@@._V1_FMjpg_UX1000_.jpg",
+    },
+    {
+        imdbID: "tt1790864",
+        Title: "The Maze Runner",
+        Year: "2014",
+        Poster: "https://m.media-amazon.com/images/M/MV5BMjUyNTA3MTAyM15BMl5BanBnXkFtZTgwOTEyMTkyMjE@._V1_FMjpg_UX1000_.jpg",
+    },
+    {
+        imdbID: "tt8589698",
+        Title: "Maze Runner: The Death Cure",
+        Year: "2018",
+        Poster: "https://m.media-amazon.com/images/M/MV5BMGNhZWRkMDQtMzU2Ni00MTE2LThhZjgtMTFlNTZhMDQ1YzI4XkEyXkFqcGdeQXVyNzU3Nzk4MDQ@._V1_FMjpg_UX1000_.jpg",
+    },
+    // {
+    //     imdbID: "tt4046784",
+    //     Title: "Maze Runner: The Scorch Trials",
+    //     Year: "2015",
+    //     Poster: "https://m.media-amazon.com/images/M/MV5BMjE3MDU2NzQyMl5BMl5BanBnXkFtZTgwMzQxMDQ3NTE@._V1_FMjpg_UX1000_.jpg",
+    // },
+    // {
+    //     imdbID: "tt2560140",
+    //     Title: "Attack on Titan",
+    //     Year: "2013",
+    //     Poster: "https://m.media-amazon.com/images/M/MV5BNDFjYTIxMjctYTQ2ZC00OGQ4LWE3OGYtNDdiMzNiNDZlMDAwXkEyXkFqcGdeQXVyNzI3NjY3NjQ@._V1_FMjpg_UX1000_.jpg",
+    // },
+    // {
+    //     imdbID: "tt21209876",
+    //     Title: "Ore dake Level Up na Ken",
+    //     Year: "2024",
+    //     Poster: "https://m.media-amazon.com/images/M/MV5BODJkZTM3MWYtOTkxNS00YWUxLTg5NjAtOTk4ZWM5MTBmMzAyXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_FMjpg_UX1000_.jpg",
+    // },
+    // {
+    //     imdbID: "tt12409194",
+    //     Title: "Battle Through the Heavens",
+    //     Year: "2017",
+    //     Poster: "https://m.media-amazon.com/images/M/MV5BOThhZjM4NjctZTVkMy00MjBkLTkwNGUtNzFkMTZjZTUwYzE2XkEyXkFqcGdeQXVyNTY4MjkyOTk@._V1_FMjpg_UX1000_.jpg",
+    // },
 ];
 
 const tempWatchedData = [
@@ -68,27 +110,26 @@ function Search() {
     );
 }
 
-function NumResults() {
+function NumResults({ movies }) {
     return (
         <p className="num-results">
-            Found <strong>x</strong> results
+            Found <strong>{movies?.length}</strong> results
         </p>
     );
 }
 
-function NavBar() {
+function NavBar({ movies }) {
     return (
         <nav className="nav-bar">
             <Logo />
             <Search />
-            <NumResults />
+            <NumResults movies={movies} />
         </nav>
     );
 }
 
-function MovieList() {
+function MovieList({ movies }) {
     const [isOpen1, setIsOpen1] = useState(true);
-    const [movies, setMovies] = useState(tempMovieData);
 
     return (
         <div className="box">
@@ -191,19 +232,20 @@ function WatchedList() {
     );
 }
 
-function Main() {
+function Main({ movies }) {
     return (
         <main className="main">
-            <MovieList />
+            <MovieList movies={movies} />
             <WatchedList />
         </main>
     );
 }
 export default function App() {
+    const [movies, setMovies] = useState(tempMovieData);
     return (
         <>
-            <NavBar />
-            <Main />
+            <NavBar movies={movies} />
+            <Main movies={movies} />
         </>
     );
 }
