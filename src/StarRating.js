@@ -59,7 +59,7 @@ function Star({ onRate, full, onHoverIn, onHoverOut }) {
     );
 }
 
-export default function StarRating({ max }) {
+export default function StarRating({ max = 5 }) {
     const [rating, setRating] = useState(0);
     const [tempRating, setTempRating] = useState(0);
     function handleRating(rating) {
