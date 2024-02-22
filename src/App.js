@@ -33,9 +33,7 @@ function Logo() {
     );
 }
 
-function Search() {
-    const [query, setQuery] = useState("");
-
+function Search({ query, setQuery }) {
     return (
         <input
             className="search"
@@ -189,7 +187,7 @@ export default function App() {
     const [movies, setMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
-    const query = "jhoasdnasklidhas";
+    const [query, setQuery] = useState("hitler");
     /**
      * useEffect hook that fetches movie data from an API and sets the retrieved data to the state.
      * @returns None
@@ -198,6 +196,7 @@ export default function App() {
         async function fetchMovie() {
             try {
                 setIsLoading(true);
+                setError("");
                 const res = await fetch(
                     `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`
                 );
@@ -208,8 +207,6 @@ export default function App() {
 
                 if (data.Response === "False") throw new Error(data.Error);
 
-                console.log(data);
-
                 setMovies(data.Search);
             } catch (error) {
                 setError(error.message);
@@ -218,13 +215,18 @@ export default function App() {
             }
         }
 
+        if (query.length < 3) {
+            setMovies([]);
+            setError("");
+            return;
+        }
         fetchMovie();
-    }, []);
+    }, [query]);
     return (
         <>
             <NavBar>
                 <Logo />
-                <Search />
+                <Search query={query} setQuery={setQuery} />
                 <NumResults movies={movies} />
             </NavBar>
             <Main>
