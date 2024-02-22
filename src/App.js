@@ -1,67 +1,4 @@
-import { useState } from "react";
-
-const tempMovieData = [
-    {
-        imdbID: "tt15398776",
-        Title: "Oppenheimer",
-        Year: "2013",
-        Poster: "https://m.media-amazon.com/images/M/MV5BMDBmYTZjNjUtN2M1MS00MTQ2LTk2ODgtNzc2M2QyZGE5NTVjXkEyXkFqcGdeQXVyNzAwMjU2MTY@._V1_SX300.jpg",
-    },
-    {
-        imdbID: "tt1517268",
-        Title: "Barbie",
-        Year: "2023",
-        Poster: "https://m.media-amazon.com/images/M/MV5BNjU3N2QxNzYtMjk1NC00MTc4LTk1NTQtMmUxNTljM2I0NDA5XkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_SX300.jpg",
-    },
-    {
-        imdbID: "tt8589698",
-        Title: "Teenage Mutant Ninja Turtles: Mutant Mayhem",
-        Year: "2023",
-        Poster: "https://m.media-amazon.com/images/M/MV5BYzE4MTllZTktMTIyZS00Yzg1LTg1YzAtMWQwZTZkNjNkODNjXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_SX300.jpg",
-    },
-    {
-        imdbID: "tt1216475",
-        Title: "Cars 2",
-        Year: "2011",
-        Poster: "https://m.media-amazon.com/images/M/MV5BMTUzNTc3MTU3M15BMl5BanBnXkFtZTcwMzIxNTc3NA@@._V1_FMjpg_UX1000_.jpg",
-    },
-    {
-        imdbID: "tt1790864",
-        Title: "The Maze Runner",
-        Year: "2014",
-        Poster: "https://m.media-amazon.com/images/M/MV5BMjUyNTA3MTAyM15BMl5BanBnXkFtZTgwOTEyMTkyMjE@._V1_FMjpg_UX1000_.jpg",
-    },
-    {
-        imdbID: "tt8589698",
-        Title: "Maze Runner: The Death Cure",
-        Year: "2018",
-        Poster: "https://m.media-amazon.com/images/M/MV5BMGNhZWRkMDQtMzU2Ni00MTE2LThhZjgtMTFlNTZhMDQ1YzI4XkEyXkFqcGdeQXVyNzU3Nzk4MDQ@._V1_FMjpg_UX1000_.jpg",
-    },
-    // {
-    //     imdbID: "tt4046784",
-    //     Title: "Maze Runner: The Scorch Trials",
-    //     Year: "2015",
-    //     Poster: "https://m.media-amazon.com/images/M/MV5BMjE3MDU2NzQyMl5BMl5BanBnXkFtZTgwMzQxMDQ3NTE@._V1_FMjpg_UX1000_.jpg",
-    // },
-    // {
-    //     imdbID: "tt2560140",
-    //     Title: "Attack on Titan",
-    //     Year: "2013",
-    //     Poster: "https://m.media-amazon.com/images/M/MV5BNDFjYTIxMjctYTQ2ZC00OGQ4LWE3OGYtNDdiMzNiNDZlMDAwXkEyXkFqcGdeQXVyNzI3NjY3NjQ@._V1_FMjpg_UX1000_.jpg",
-    // },
-    // {
-    //     imdbID: "tt21209876",
-    //     Title: "Ore dake Level Up na Ken",
-    //     Year: "2024",
-    //     Poster: "https://m.media-amazon.com/images/M/MV5BODJkZTM3MWYtOTkxNS00YWUxLTg5NjAtOTk4ZWM5MTBmMzAyXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_FMjpg_UX1000_.jpg",
-    // },
-    // {
-    //     imdbID: "tt12409194",
-    //     Title: "Battle Through the Heavens",
-    //     Year: "2017",
-    //     Poster: "https://m.media-amazon.com/images/M/MV5BOThhZjM4NjctZTVkMy00MjBkLTkwNGUtNzFkMTZjZTUwYzE2XkEyXkFqcGdeQXVyNTY4MjkyOTk@._V1_FMjpg_UX1000_.jpg",
-    // },
-];
+import { useEffect, useState } from "react";
 
 const tempWatchedData = [
     {
@@ -208,7 +145,7 @@ function WatchedListItem({ movie }) {
         </li>
     );
 }
-function BoxMovies({ element }) {
+function BoxMovies({ children }) {
     const [isOpen, setIsOpen] = useState(true);
 
     return (
@@ -219,7 +156,7 @@ function BoxMovies({ element }) {
             >
                 {isOpen ? "–" : "+"}
             </button>
-            {isOpen && element}
+            {isOpen && children}
         </div>
     );
 }
@@ -227,9 +164,62 @@ function BoxMovies({ element }) {
 function Main({ children }) {
     return <main className="main">{children}</main>;
 }
+
+function Loader() {
+    return (
+        <div className="loader">
+            <div className="loading-bar">
+                <div className="bar"></div>
+            </div>
+        </div>
+    );
+}
+
+function ErrorMessage({ message }) {
+    return (
+        <div className="error">
+            <span>⛔</span> {message}
+        </div>
+    );
+}
+const API_KEY = "41b5eb3";
+
 export default function App() {
     const [watched, setWatched] = useState(tempWatchedData);
-    const [movies, setMovies] = useState(tempMovieData);
+    const [movies, setMovies] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
+    const query = "jhoasdnasklidhas";
+    /**
+     * useEffect hook that fetches movie data from an API and sets the retrieved data to the state.
+     * @returns None
+     */
+    useEffect(() => {
+        async function fetchMovie() {
+            try {
+                setIsLoading(true);
+                const res = await fetch(
+                    `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`
+                );
+
+                if (!res.ok) throw new Error("Something went Error");
+
+                const data = await res.json();
+
+                if (data.Response === "False") throw new Error(data.Error);
+
+                console.log(data);
+
+                setMovies(data.Search);
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        fetchMovie();
+    }, []);
     return (
         <>
             <NavBar>
@@ -238,15 +228,15 @@ export default function App() {
                 <NumResults movies={movies} />
             </NavBar>
             <Main>
-                <BoxMovies element={<MovieList movies={movies} />} />
-                <BoxMovies
-                    element={
-                        <>
-                            <WatchedList watched={watched} />
-                            <WatchedSummary watched={watched} />
-                        </>
-                    }
-                />
+                <BoxMovies>
+                    {isLoading && <Loader />}
+                    {error && <ErrorMessage message={error} />}
+                    {!isLoading && !error && <MovieList movies={movies} />}
+                </BoxMovies>
+                <BoxMovies>
+                    <WatchedList watched={watched} />
+                    <WatchedSummary watched={watched} />
+                </BoxMovies>
             </Main>
         </>
     );
