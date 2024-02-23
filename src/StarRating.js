@@ -46,7 +46,7 @@ function Star({ onRate, full, onHoverIn, onHoverOut, color, size }) {
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox={`0 0 ${size + 4} ${size + 4}`}
-                    stroke="#000"
+                    stroke="#fff"
                 >
                     <path
                         strokeLinecap="round"
