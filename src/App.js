@@ -80,7 +80,7 @@ function WatchedSummary({ watched }) {
                 </p>
                 <p>
                     <span>🎬</span>
-                    <span>{avgImdbRating}</span>
+                    <span>{avgImdbRating.toFixed(1)}</span>
                 </p>
                 <p>
                     <span>🌟</span>
@@ -88,7 +88,7 @@ function WatchedSummary({ watched }) {
                 </p>
                 <p>
                     <span>⏳</span>
-                    <span>{avgRuntime} min</span>
+                    <span>{Math.trunc(avgRuntime)} min</span>
                 </p>
             </div>
         </div>
@@ -108,8 +108,8 @@ function WatchedList({ watched }) {
 function WatchedListItem({ movie }) {
     return (
         <li key={movie.imdbID}>
-            <img src={movie.Poster} alt={`${movie.Title} poster`} />
-            <h3>{movie.Title}</h3>
+            <img src={movie.poster} alt={`${movie.title} poster`} />
+            <h3>{movie.title}</h3>
             <div>
                 <p>
                     <span>🎬</span>
@@ -143,7 +143,7 @@ function BoxMovies({ children }) {
     );
 }
 
-function MovieDetails({ selectedId, onCloseMovie }) {
+function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
     const [movie, setMovie] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const {
@@ -158,6 +158,20 @@ function MovieDetails({ selectedId, onCloseMovie }) {
         Director: director,
         Released: released,
     } = movie;
+
+    function handleAddWatched() {
+        const newWatchedMovie = {
+            imbdId: selectedId,
+            title,
+            year,
+            poster,
+            imdbRating: Number(imdbRating),
+            runtime: Number(runtime.split(" ").at(0)),
+        };
+        onAddWatched(newWatchedMovie);
+        onCloseMovie();
+    }
+
     console.log(title, year);
     useEffect(() => {
         setIsLoading(true);
@@ -211,6 +225,12 @@ function MovieDetails({ selectedId, onCloseMovie }) {
                         <p>{director}</p>
                         <div className="rating">
                             <StarRating max={5} color="#ffa534" size={20} />
+                            <button
+                                className="btn-add"
+                                onClick={handleAddWatched}
+                            >
+                                + Add to watched
+                            </button>
                         </div>
                     </section>
                 </>
@@ -243,7 +263,7 @@ function ErrorMessage({ message }) {
 const API_KEY = "41b5eb3";
 
 export default function App() {
-    const [watched, setWatched] = useState();
+    const [watched, setWatched] = useState([]);
     const [movies, setMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
@@ -259,7 +279,7 @@ export default function App() {
     }
 
     function handleAddWatched(movie) {
-        r;
+        setWatched((watched) => [...watched, movie]);
     }
     /**
      * useEffect hook that fetches movie data from an API and sets the retrieved data to the state.
@@ -318,11 +338,12 @@ export default function App() {
                         <MovieDetails
                             selectedId={selectedMovieId}
                             onCloseMovie={handleCloseMovie}
+                            onAddWatched={handleAddWatched}
                         />
                     ) : (
                         <>
-                            <WatchedList watched={watched} />
                             <WatchedSummary watched={watched} />
+                            <WatchedList watched={watched} />
                         </>
                     )}
                 </BoxMovies>
